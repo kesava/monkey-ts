@@ -5,25 +5,27 @@ interface ILexer {
 }
 
 enum TokenType {
-  LET, // let
-  IDENTIFIER, // identifier
-  FOR,
-  IF,
-  ELSE,
-  FUNCTION,
-  RETURN,
+  SUB,
+  MUL,
+  ADD,
+  LT,
+  GT,
+  EQ,
+  POP,
+  SWAP,
+  GET,
+  PUT,
+  PUSH,
+  PRS,
+  PRI,
+  EXEC,
+  PROGRAM,
   QUESTIONMARK,
-  COLON,
+  IDENTIFIER,
   INTEGER, // integer
-  PLUS, // +
-  MINUS, // -
-  MUL, // *
   DIV, // /
-  EQUAL, // =
-  EQUALTO, // ==
   LPAREN, // (
   RPAREN, // )
-  SEMICOLON, // ;
   STRING, // "string"
   EOF, // end of file
 }
@@ -31,32 +33,73 @@ enum TokenType {
 interface Token {
   tokenType: TokenType;
   literal: string;
+  position: number;
 }
 
 const Keywords = [
   {
-    type: TokenType.LET,
-    literal: 'let',
+    type: TokenType.PROGRAM,
+    literal: 'postfix',
   },
   {
-    type: TokenType.IF,
-    literal: 'if',
+    type: TokenType.SUB,
+    literal: 'sub',
   },
   {
-    type: TokenType.ELSE,
-    literal: 'else',
+    type: TokenType.MUL,
+    literal: 'mul',
   },
   {
-    type: TokenType.FOR,
-    literal: 'for',
+    type: TokenType.ADD,
+    literal: 'add',
   },
   {
-    type: TokenType.FUNCTION,
-    literal: 'function',
+    type: TokenType.DIV,
+    literal: 'div',
   },
   {
-    type: TokenType.RETURN,
-    literal: 'return',
+    type: TokenType.LT,
+    literal: 'lt',
+  },
+  {
+    type: TokenType.GT,
+    literal: 'gt',
+  },
+  {
+    type: TokenType.EQ,
+    literal: 'eq',
+  },
+  {
+    type: TokenType.POP,
+    literal: 'pop',
+  },
+  {
+    type: TokenType.SWAP,
+    literal: 'swap',
+  },
+  {
+    type: TokenType.GET,
+    literal: 'get',
+  },
+  {
+    type: TokenType.PUT,
+    literal: 'put',
+  },
+  {
+    type: TokenType.PUSH,
+    literal: 'push',
+  },
+  {
+    type: TokenType.PRS,
+    literal: 'prs',
+  },
+  {
+    type: TokenType.PRI,
+    literal: 'pri',
+  },
+  {
+    type: TokenType.EXEC,
+    literal: 'exec',
   },
 ];
 

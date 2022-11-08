@@ -29,8 +29,10 @@ export default class Lexer {
   }
 
   private nextToken(): Token {
+    let beginPositionOfToken = 0;
     while (this.lexer.currentPosition < this.lengthOfInput) {
       this.lexer.currentChar = this.getCurrentChar();
+      beginPositionOfToken = this.lexer.currentPosition;
       // console.log({ currentChar: this.lexer.currentChar });
       switch (this.lexer.currentChar) {
         // consume whitespace
@@ -40,100 +42,50 @@ export default class Lexer {
         case '\r':
           this.consumeChar();
           break;
-        case '+':
-          this.consumeChar();
-          return {
-            tokenType: TokenType.PLUS,
-            literal: '+',
-          };
-        case '-':
-          this.consumeChar();
-          return {
-            tokenType: TokenType.MINUS,
-            literal: '-',
-          };
-        case '*':
-          this.consumeChar();
-          return {
-            tokenType: TokenType.MUL,
-            literal: '*',
-          };
         case '(':
           this.consumeChar();
           return {
             tokenType: TokenType.LPAREN,
             literal: '(',
+            position: beginPositionOfToken,
           };
         case ')':
           this.consumeChar();
           return {
             tokenType: TokenType.RPAREN,
             literal: ')',
+            position: beginPositionOfToken,
           };
-        case '/':
-          this.consumeChar();
-          return {
-            tokenType: TokenType.DIV,
-            literal: '/',
-          };
-        case ';':
-          this.consumeChar();
-          return {
-            tokenType: TokenType.SEMICOLON,
-            literal: ';',
-          };
-        case ':':
-          this.consumeChar();
-          return {
-            tokenType: TokenType.COLON,
-            literal: ':',
-          };
-        case '?':
-          this.consumeChar();
-          return {
-            tokenType: TokenType.QUESTIONMARK,
-            literal: '?',
-          };
-        case '=':
-          if (this.peekNextChar() === '=') {
-            this.consumeChar(); // consume the first =
-            this.consumeChar(); // consume the second =
-            return {
-              tokenType: TokenType.EQUALTO,
-              literal: '==',
-            }
-          } else {
-            this.consumeChar(); // consume the =
-            return {
-              tokenType: TokenType.EQUAL,
-              literal: '=',
-            };
-          }
         case '"':
           this.consumeChar(); // consume the opening "
           const str = this.consumeString();
           return {
             tokenType: TokenType.STRING,
             literal: str,
+            position: beginPositionOfToken,
           };
         default:
           if (this.isDigit(this.lexer.currentChar)) {
             return {
               tokenType: TokenType.INTEGER,
               literal: this.consumeNumeric(),
+              position: beginPositionOfToken,
             };
           } else {
             const iden = this.consumeIdentifier();
+            const idenToken = Keywords.filter(kv => (kv.literal === iden)).length > 0 ? Keywords.filter(kv => (kv.literal === iden))[0].type : TokenType.IDENTIFIER;
             return {
-              literal: iden,
-              tokenType: Keywords.filter(kv => (kv.literal === iden)).length > 0 ? Keywords.filter(kv => (kv.literal === iden))[0].type : TokenType.IDENTIFIER,
-            }
+                literal: iden,
+                tokenType: idenToken,
+                position: beginPositionOfToken,
+              }
           }
       }
     }
     return {
       tokenType: TokenType.EOF,
       literal: '',
+      position: this.lexer.currentPosition,
     };
   }
 
